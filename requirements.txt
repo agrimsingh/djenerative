@@ -1,0 +1,4 @@
+pytesseract
+pyautogui
+google-generativeai
+python-dotenv
