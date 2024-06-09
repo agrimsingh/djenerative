@@ -228,67 +228,47 @@ print(f"Extracted hot cue time: {hot_cue_b_time} ({hot_cue_b_seconds} seconds)")
 # Start the initial deck
 start_deck(active_deck)
 
-margin_of_error = 0.3
+import time
 
-# Function to ensure consistent transition
+margin_of_error = 0.5  # Example value, set as needed
+
 def check_and_transition(current_deck, current_deck_seconds, hot_cue_b_seconds, next_deck):
-    print(f"Deck {current_deck} playback seconds: {current_deck_seconds}")
-    print(f"Hot cue B seconds: {hot_cue_b_seconds}")
-
     if abs(current_deck_seconds - hot_cue_b_seconds) <= margin_of_error:
-        print(f"Playback seconds within margin of error for Deck {current_deck}")
         start_deck(next_deck)
-        print(f"Starting Deck {next_deck}")
-        # time.sleep(0.5)
         press_low_button(next_deck)
-        print(f"Pressed LOW button on Deck {next_deck}")
-
-        hot_cue_b_time = get_hot_cue_time(next_deck)
-        hot_cue_b_seconds = time_to_seconds(hot_cue_b_time)
-        print(f"Updated hot cue time for Deck {next_deck}: {hot_cue_b_time} ({hot_cue_b_seconds} seconds)")
+        hot_cue_b_seconds = time_to_seconds(get_hot_cue_time(next_deck))
         return hot_cue_b_seconds
     return hot_cue_b_seconds
 
-# Monitor the playback position and switch decks at the cue point
-while True:
-    deck1_position = get_playback_position(1)
-    deck2_position = get_playback_position(2)
-    
-    if deck1_position:
-        deck1_seconds = time_to_seconds(deck1_position)
-    else:
-        deck1_seconds = None
-    
-    if deck2_position:
-        deck2_seconds = time_to_seconds(deck2_position)
-    else:
-        deck2_seconds = None
-    
-    print(f"Deck 1 playback position: {deck1_position}")
-    print(f"Deck 2 playback position: {deck2_position}")
-    
-    # Check Deck 1 transition to Deck 2
-    if deck1_seconds is not None:
-        hot_cue_b_seconds = check_and_transition(1, deck1_seconds, hot_cue_b_seconds, 2)
-    
-    # Check Deck 2 transition to Deck 1
-    if deck2_seconds is not None:
-        hot_cue_b_seconds = check_and_transition(2, deck2_seconds, hot_cue_b_seconds, 1)
+def handle_song_finished(deck, next_deck):
+    press_low_button(next_deck)
+    load_new_song(deck)
+    hot_cue_b_seconds = time_to_seconds(get_hot_cue_time(deck))
+    return hot_cue_b_seconds
 
-    if has_song_finished(1):
-        press_low_button(2)
-        print(f"Song on Deck 1 has finished")
-        load_new_song(1)
-        hot_cue_b_time = get_hot_cue_time(1)
-        hot_cue_b_seconds = time_to_seconds(hot_cue_b_time)
-        print(f"Loaded new song on Deck 1. Updated hot cue time: {hot_cue_b_time} ({hot_cue_b_seconds} seconds)")
+def main_loop():
+    hot_cue_b_seconds = 0  # Initialize with a default value or fetch initial hot cue time
 
-    if has_song_finished(2):
-        press_low_button(1)
-        print(f"Song on Deck 2 has finished")
-        load_new_song(2)
-        hot_cue_b_time = get_hot_cue_time(2)
-        hot_cue_b_seconds = time_to_seconds(hot_cue_b_time)
-        print(f"Loaded new song on Deck 2. Updated hot cue time: {hot_cue_b_time} ({hot_cue_b_seconds} seconds)")
+    while True:
+        deck1_position = get_playback_position(1)
+        deck2_position = get_playback_position(2)
 
-    time.sleep(0.1)
+        deck1_seconds = time_to_seconds(deck1_position) if deck1_position else None
+        deck2_seconds = time_to_seconds(deck2_position) if deck2_position else None
+
+        if deck1_seconds is not None:
+            hot_cue_b_seconds = check_and_transition(1, deck1_seconds, hot_cue_b_seconds, 2)
+
+        if deck2_seconds is not None:
+            hot_cue_b_seconds = check_and_transition(2, deck2_seconds, hot_cue_b_seconds, 1)
+
+        if has_song_finished(1):
+            hot_cue_b_seconds = handle_song_finished(1, 2)
+
+        if has_song_finished(2):
+            hot_cue_b_seconds = handle_song_finished(2, 1)
+
+        time.sleep(0.05)
+
+if __name__ == "__main__":
+    main_loop()
