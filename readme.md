@@ -2,6 +2,8 @@
 
 DJ-enerative is a project that uses GPT 4 Vision and Computer Vision to automate the control of Rekordbox. This project is designed to help DJs create unique and dynamic sets by using AI to generate new and interesting transitions between songs.
 
+[![DJ-enerative Logo](https://img.youtube.com/vi/KclN_sV4JBo/0.jpg)](https://youtu.be/KclN_sV4JBo?si=joaAN2Em7rzjkP6X)
+
 ## How it works
 
 DJ-enerative uses GPT 4 Vision to analyze the audio and video of a song and generate a unique transition based on the content of the song. This transition is then sent to Rekordbox, which automatically applies the transition to the next song in the playlist. This might look like cutting the bass, where the transitions are etc.
