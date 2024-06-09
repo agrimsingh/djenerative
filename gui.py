@@ -1,9 +1,3 @@
-#(1103, 429, 40, 20)
-#(1333, 301, 60, 20)
-
-# play button deck 1 - (527, 488, 33, 24)
-# play button deck 2 - (818, 488, 33, 24)
-
 import pyautogui
 import os
 import time
@@ -173,7 +167,6 @@ def load_new_song(deck):
         model = "gpt-4-vision-preview",
         max_tokens=2562,
         temperature=0,
-        # system="Analyze the provided image of a DJ software with a playlist of available songs. Your task, as a House and Techno music super fan, is to meticulously extract structured information to create a detailed representation of the songs available for the DJ to play. This includes identifying the track name, the artist's name, the key of the song, the BPM or tempo of the track and the genre. \n\nYour extraction will help in understanding what songs are available for the DJ to select from, facilitating a great party they will play.",
         messages=[
             {
                 "role": "system",
@@ -235,51 +228,6 @@ print(f"Extracted hot cue time: {hot_cue_b_time} ({hot_cue_b_seconds} seconds)")
 # Start the initial deck
 start_deck(active_deck)
 
-# Define the margin of error in seconds
-margin_of_error = 0.3  # Since OCR includes tenths of a second, a larger margin might be needed
-
-# while True:
-#     for deck in [1, 2]:
-#         playback_position = get_playback_position(deck)
-#         print(f"Deck {deck} playback position: {playback_position}")
-
-#         if playback_position:
-#             playback_seconds = time_to_seconds(playback_position)
-
-#             # Check if playback position is within the margin of error
-#             if abs(playback_seconds - hot_cue_b_seconds) <= margin_of_error:
-#                 # Start the next deck
-#                 next_deck = 2 if deck == 1 else 1
-#                 start_deck(next_deck)
-
-#                 # Press the "LOW" button on the new inactive deck immediately
-#                 press_low_button(next_deck)
-
-#                 # Update hot cue B time for the new active deck
-#                 hot_cue_b_time = get_hot_cue_time(next_deck)
-#                 hot_cue_b_seconds = time_to_seconds(hot_cue_b_time)
-#                 print(f"Updated hot cue time for Deck {next_deck}: {hot_cue_b_time} ({hot_cue_b_seconds} seconds)")
-
-#                 # Introduce a delay to allow the software to update the inactive deck's state
-#                 time.sleep(2)  # Adjust the delay as needed
-
-#         # Check if the song has finished
-#         if has_song_finished(deck):
-#             print(f"Song on Deck {deck} has finished")
-#             load_new_song(deck)
-#             hot_cue_b_time = get_hot_cue_time(deck)
-#             hot_cue_b_seconds = time_to_seconds(hot_cue_b_time)
-#             print(f"Loaded new song on Deck {deck}. Updated hot cue time: {hot_cue_b_time} ({hot_cue_b_seconds} seconds)")
-
-#     time.sleep(0.1)  # Check every 0.1 seconds
-
-# Define the margin of error in seconds
-# margin_of_error = 0.3  # Since OCR includes tenths of a second, a larger margin might be needed
-
-# Monitor the playback position and switch decks at the cue point
-# Define the margin of error in seconds
-# Define the margin of error in seconds
-# Define the margin of error in seconds
 margin_of_error = 0.3
 
 # Function to ensure consistent transition
